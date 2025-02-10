@@ -29,7 +29,7 @@ async function deployTokenCoinContracts() {
   //This Contract is a creation of a ERC20 Token Coin
   let tokenERC20BC = await deployAndSendUploadContract(abi, byteCode, account, [], web3);
 
-
+  console.log("THE TOKEN OF THE CRYPTO CREATED (AND CONTRACT ADDRESS, WHICH IS THE SAME WICH IDENTIFIES IS: "+tokenERC20BC);
 
 // Deploy the Other Contract which interacts with the ERC20 Token Coin Created before
 // We use Argument (tokenERC20BC) which is the address of the ERC20 creation Contract.
@@ -39,8 +39,7 @@ async function deployTokenCoinContracts() {
   const abi2 = compiledContract2.abi;
   const byteCode2 = compiledContract2.bytecode;
 
-  console.log(tokenERC20BC);
-  await deployAndSendUploadContract(abi2, byteCode2, account,[tokenERC20BC], web3);
+  await deployAndSendUploadContract(abi2, byteCode2, account,["0x5fbdb2315678afecb367f032d93f642f64180aa3"], web3);
 }
 
 deployTokenCoinContracts();
