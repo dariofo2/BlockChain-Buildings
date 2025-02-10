@@ -9,7 +9,7 @@ pragma solidity ^0.8.28;
 
 import "./ERC20/ERC20.sol";
 
-contract ERC20FixedSupply is ERC20 {
+contract ERC20BlockchainSupply is ERC20 {
     constructor() ERC20("Blockchain", "BC") {
         _mint(msg.sender, 5000);
     }
