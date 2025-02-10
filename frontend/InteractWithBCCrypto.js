@@ -44,7 +44,9 @@ async function sendContractERC20transferBC() {
     let transfer = await contractERC20.methods.transfer("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199", 100).send({ from: account.address });
 }
 async function sendContractTransferBC(value) {
+    //First we have to approve the Contract FROM INSIDE ERC20 Main Contract. to spend the ERC20 Token from the account.
     let transferAprovalSpender=await contractERC20.methods.approve(contractAddress,value).send({from:account.address});
+    //Finally, when is aproved we can use the Other Contract outside to Transfer the Token
     let transferEncondedAbi = await contract.methods.transferBC(value).send({ from: account.address, gas: 500000 });
     console.log(transferEncondedAbi)
 
