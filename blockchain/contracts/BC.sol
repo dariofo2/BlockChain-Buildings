@@ -13,6 +13,6 @@ import "./ERC20/ERC20.sol";
 
 contract ERC20BlockchainSupply is ERC20 {
     constructor() ERC20("Blockchain", "BC") {
-        _mint(msg.sender, 50000000000);
+        _mint(address(this), 50000000000);
     }
 }

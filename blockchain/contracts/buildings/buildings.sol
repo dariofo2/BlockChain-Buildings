@@ -1,72 +1,123 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.28;
 
-import "openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin/contracts/utils/Counters.sol";
+import "openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Buildings is ERC721 {
+contract Buildings is ERC20 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+
+    uint private _fee=10;
+    address payable private _owner;
+
+    mapping(uint256 => Building) private TokenId_ToBuilding;
+    mapping(address => uint256[]) private Address_ToTokens;
+    uint256[] private _onSaleBuildings;
 
     struct Building {
         string name;
         uint level;
         uint timeFromSpend;
+        address owner;
+        bool onSale;
+        uint value;
     }
     
-    mapping(uint256 => Building) TokenId_ToBuilding;
-    mapping(address => uint256[]) Address_ToTokens;
-    
-    constructor() public ERC721("Building", "BD") {}
+    constructor() public ERC20("Building", "BD") {
+        _owner=payable(msg.sender);
+    }
 
+    function ownerOf(uint256 tokenId) public view returns (address) {
+        return TokenId_ToBuilding[tokenId].owner;
+    }
     
-    function createBuilding(
-        string memory name,
-        string memory tokenURI
-    ) public external returns (uint256) {
+    function createBuilding(string memory name) public returns (uint256) {
         address sender = msg.sender;
         _tokenIds.increment();
 
-        uint256 newItemId = _tokenIds.current();
-        _mint(msg.sender, newItemId);
+        uint256 newTokenId = _tokenIds.current();
 
-        TokenId_ToBuilding[newItemId] = Building(name,1,block.timestamp);
-        Address_ToTokens[msg.sender].push(newItemId);
+        TokenId_ToBuilding[newTokenId] = Building(name,1,block.timestamp,msg.sender,false,0);
+        Address_ToTokens[msg.sender].push(newTokenId);
 
-        return newItemId;
+        return newTokenId;
     }
     
-    function getBuildingsTokenIds () public external view returns (uint[]) {
+    function getBuildingsTokenIdsFromAddress () public view returns (uint[] memory) {
         return Address_ToTokens[msg.sender];
     }
 
-    function getBuilding (uint256 tokenId) public external view returns (Building) {
+    function getBuilding (uint256 tokenId) public view returns (Building memory) {
         require(ownerOf(tokenId)==msg.sender);
-        return TokenId_ToBuilding(tokenId);
+        Building memory building = TokenId_ToBuilding[tokenId];
+        return building;
     }
 
     function upLevelBuilding (uint256 tokenId) public payable returns (uint) {
         require(ownerOf(tokenId)==msg.sender);
         require(msg.value==1);
 
-        address payable hola=address(msg.sender);
-        hola.sendValue(recipient, amount);
         TokenId_ToBuilding[tokenId].level++;
         
         return TokenId_ToBuilding[tokenId].level;
     }
 
     function withDraw () external {
-        address payable sender=msg.sender;
-        sender.transfer(address(this).balance);
+        _owner.transfer(address(this).balance);
     }
 
-    function payLoadBuilding (uint256 tokenId) public external {
+    function payLoadBuilding (uint256 tokenId) public {
         require(ownerOf(tokenId)==msg.sender);
+
+        Building memory building=TokenId_ToBuilding[tokenId];
+
+        uint timeFromSpend=building.timeFromSpend;
+        uint level=building.level;
+
+        uint timePassed=block.timestamp - timeFromSpend;
+
+        uint amount= timePassed * level * _fee;
+
+        _transfer(address(this), msg.sender, amount);
+
+        
     } 
 
-    function transferBuilding (address to) public external {
+    function putBuildingOnSale (uint256 tokenId,uint value) public {
+        require(ownerOf(tokenId)==msg.sender);
+        
+        TokenId_ToBuilding[tokenId].onSale=true;
+        TokenId_ToBuilding[tokenId].value=value;
 
+        _onSaleBuildings.push(tokenId);
+    }
+
+    function transferBuyBuilding(uint tokenId) public {
+        
+        Building memory building= TokenId_ToBuilding[tokenId];
+        require (building.onSale);
+        
+        transfer(building.owner, building.value);
+        address buildingLastOwner=building.owner;
+
+        //Delete Building in msg.sender
+        TokenId_ToBuilding[tokenId].onSale=false;
+        TokenId_ToBuilding[tokenId].owner=msg.sender;
+        Address_ToTokens[msg.sender].push(tokenId);
+
+        for (uint256 i = 0; i < Address_ToTokens[buildingLastOwner].length; i++) {
+            uint256 x = Address_ToTokens[buildingLastOwner][i];
+            if (x==tokenId) {
+                delete Address_ToTokens[buildingLastOwner][i];
+                break;
+            }
+        }
+        
+    }
+
+    function getBuildingsOnSale () public view returns (uint256[] memory) {
+        return _onSaleBuildings;
     }
 
 
