@@ -122,7 +122,7 @@ upLevelBuilding(1,account.address);
 payloadBuilding(1);
 
 //Sell/Buy Buildings
-//putBuildingOnSale(1,50);
+putBuildingOnSale(1,50);
 //transferBuyBuilding(1,accountMain.address);
 getBuildingsOnSale();
 

@@ -88,6 +88,7 @@ contract Buildings is ERC20 {
 
     function putBuildingOnSale (uint256 tokenId,uint value) public {
         require(ownerOf(tokenId)==msg.sender);
+        require(TokenId_ToBuilding[tokenId].onSale==false);
         
         TokenId_ToBuilding[tokenId].onSale=true;
         TokenId_ToBuilding[tokenId].value=value;
