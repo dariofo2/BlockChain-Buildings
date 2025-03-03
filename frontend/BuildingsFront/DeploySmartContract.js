@@ -1,7 +1,7 @@
 import { Web3 } from "web3";
 import fs from "fs";
 import path from "path";
-import deployAndSendUploadContract from "../deployAndSendUploadContract.js";
+import deployAndSendUploadContract from "./deployAndSendUploadContract.js";
 
 //Connect To BlockChain Provider with Web3.js
 const web3 = new Web3("http://127.0.0.1:8545");
