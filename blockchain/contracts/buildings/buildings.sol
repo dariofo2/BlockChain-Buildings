@@ -26,14 +26,15 @@ contract Buildings is ERC20 {
     
     constructor() public ERC20("Building", "BD") {
         _owner=payable(msg.sender);
+        _mint(address(this),500000000);
     }
 
     function ownerOf(uint256 tokenId) public view returns (address) {
         return TokenId_ToBuilding[tokenId].owner;
     }
     
-    function createBuilding(string memory name) public returns (uint256) {
-        address sender = msg.sender;
+    function createBuilding(string memory name) public payable returns (uint256) {
+        require(msg.value== 1 ether);
         _tokenIds.increment();
 
         uint256 newTokenId = _tokenIds.current();
@@ -49,14 +50,14 @@ contract Buildings is ERC20 {
     }
 
     function getBuilding (uint256 tokenId) public view returns (Building memory) {
-        require(ownerOf(tokenId)==msg.sender);
+        //require(ownerOf(tokenId)==msg.sender);
         Building memory building = TokenId_ToBuilding[tokenId];
         return building;
     }
 
     function upLevelBuilding (uint256 tokenId) public payable returns (uint) {
         require(ownerOf(tokenId)==msg.sender);
-        require(msg.value==1);
+        require(msg.value==1 ether);
 
         TokenId_ToBuilding[tokenId].level++;
         
@@ -78,6 +79,7 @@ contract Buildings is ERC20 {
         uint timePassed=block.timestamp - timeFromSpend;
 
         uint amount= timePassed * level * _fee;
+        TokenId_ToBuilding[tokenId].timeFromSpend=block.timestamp;
 
         _transfer(address(this), msg.sender, amount);
 
@@ -105,11 +107,19 @@ contract Buildings is ERC20 {
         TokenId_ToBuilding[tokenId].onSale=false;
         TokenId_ToBuilding[tokenId].owner=msg.sender;
         Address_ToTokens[msg.sender].push(tokenId);
-
+        
         for (uint256 i = 0; i < Address_ToTokens[buildingLastOwner].length; i++) {
             uint256 x = Address_ToTokens[buildingLastOwner][i];
             if (x==tokenId) {
                 delete Address_ToTokens[buildingLastOwner][i];
+                break;
+            }
+        }
+
+        for (uint256 i = 0; i < _onSaleBuildings.length; i++) {
+            uint256 x= _onSaleBuildings[i];
+            if (x==tokenId) {
+                delete _onSaleBuildings[i];
                 break;
             }
         }
