@@ -5,6 +5,7 @@ import Account from "./account";
 import { AccountData, Building, buildingsContract } from "../BuildingsFront/contractBuildings.ts";
 import House from "./house.tsx";
 import HouseOnSale from "./houseOnSale.tsx";
+import Cookies from "js-cookie";
 
 export default function AccountPage(props: any) {
     const [buildsContract, setBuildsContract] = useState(new buildingsContract(props.privateKey));
@@ -116,6 +117,10 @@ export default function AccountPage(props: any) {
 
     return (
         <div>
+            <button className="btn btn-danger" onClick={()=>{
+                Cookies.remove("privateKey");
+                location.reload();
+            }}>Logout</button>
             <Account
                 buildsContract={buildsContract}
                 address={accountData.address}

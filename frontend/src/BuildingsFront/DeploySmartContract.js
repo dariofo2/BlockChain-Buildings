@@ -2,20 +2,23 @@ import { Web3 } from "web3";
 import fs from "fs";
 import path from "path";
 import deployAndSendUploadContract from "./deployAndSendUploadContract.js";
+import BuildingsJson from "./Buildings.json" with {type:"json"};
 
 //Connect To BlockChain Provider with Web3.js
-const web3 = new Web3("http://127.0.0.1:8545");
+const web3 = new Web3("http://blockchain:8545");
 
 //Read the Solidity Contract Compiled to Get ABI and BYTECODE from the JSON generated on compiled
 //**Take care with relative paths, if u are testing in VSCode, the Root Path is Project path with FS.
 const pathToBCCreate = "./blockchain/artifacts/contracts/buildings/buildings.sol/Buildings.json";
 
-let readCompiledContract = fs.readFileSync(pathToBCCreate, "utf-8");
+//let readCompiledContract = fs.readFileSync(pathToBCCreate, "utf-8");
 
-const compiledContract = JSON.parse(readCompiledContract);
-const abi = compiledContract.abi;
-const byteCode = compiledContract.bytecode;
+//const compiledContract = JSON.parse(readCompiledContract);
+//const abi = compiledContract.abi;
+//const byteCode = compiledContract.bytecode;
 
+const abi=BuildingsJson.abi;
+const byteCode=BuildingsJson.bytecode;
 
 // Get Account from his private Key
 const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";

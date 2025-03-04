@@ -8,11 +8,12 @@ import { buildingsContract } from "../../BuildingsFront/contractBuildings";
 
 export default async function () {
     const cookie=await cookies();
-    const privateKey=cookie.get("privateKey").value;
+    const privateKey=cookie.get("privateKey");
+
     if (privateKey) {
         return (
             <div>
-                <AccountPage privateKey={privateKey}></AccountPage>
+                <AccountPage privateKey={privateKey.value}></AccountPage>
             </div>
         );
     } else {

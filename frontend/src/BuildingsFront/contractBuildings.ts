@@ -1,6 +1,6 @@
 import { Web3 } from "web3";
 //import fs from "fs";
-import jsonBuildings from "./Buildings.json";
+import jsonBuildings from "./Buildings.json" with {type:"json"};
 /*
 const web3 = new Web3("http://127.0.0.1:8545");
 
@@ -97,8 +97,8 @@ async symbolCoin() {
 
 
 // FUNCTIONS TO ACCESS CONTRACT
-async createBuilding() {
-    const resp = await this.contractBuildings.methods.createBuilding("Edificio Central").send({ from: this.account.address, value: 1000000000000000000 });
+async createBuilding(buildingName) {
+    const resp = await this.contractBuildings.methods.createBuilding(buildingName).send({ from: this.account.address, value: 1000000000000000000 });
     //console.log(resp);
     return resp;
 }

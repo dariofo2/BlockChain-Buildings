@@ -7,6 +7,7 @@ export default function Register () {
         <button onClick={()=>{
             const element = document.getElementById('privateKey') as HTMLInputElement;
             document.cookie="privateKey="+element.value;
+            location.reload();
         }}>Entrar</button>
     </div>
     )
