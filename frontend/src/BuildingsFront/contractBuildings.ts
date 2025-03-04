@@ -1,5 +1,6 @@
 import { Web3 } from "web3";
-import fs from "fs";
+//import fs from "fs";
+import jsonBuildings from "./Buildings.json";
 /*
 const web3 = new Web3("http://127.0.0.1:8545");
 
@@ -12,29 +13,51 @@ const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 */
 //Read Contract File JSON
 const pathToBCCreate = "./blockchain/artifacts/contracts/buildings/buildings.sol/Buildings.json";
-let readCompiledContract = fs.readFileSync(pathToBCCreate, "utf-8");
+//let readCompiledContract = fs.readFileSync(pathToBCCreate, "utf-8");
 
 //Read ABI from Contract File JSON
-const compiledContract = JSON.parse(readCompiledContract);
-const abi = compiledContract.abi;
+//const compiledContract = JSON.parse(readCompiledContract);
+//const abi = compiledContract.abi;
+const abi=jsonBuildings.abi;
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 /*
 //Create Contract Object with ABI + Contract Address
 const contractBuildings = new web3.eth.Contract(abi, contractAddress, { from: account.address });
 */
-class buildingsContract {
+
+export class AccountData {
+    address;
+    etherBalance;
+    nameCoin;
+    symbolCoin;
+    coinBalance;
+    coinContractBalance;
+    buildingsTokens;
+    buildingsOnSaleTokens;
+}
+
+export class Building {
+    tokenId;
+    name;
+    level;
+    timeFromSpend;
+    owner;
+    onSale;
+    value;
+}
+export class buildingsContract {
     web3;
     account;
     contractBuildings;
 
     constructor(privateKey) {
         this.web3 = new Web3("http://127.0.0.1:8545");
-        this.account = this.web3.eth.accounts.privateKeyToAccount("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
-        this.contractBuildings = new web3.eth.Contract(abi, contractAddress, { from: account.address });
+        this.account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
+        this.contractBuildings = new this.web3.eth.Contract(abi, contractAddress, { from: this.account.address });
     }
 // ETHEREUM BALANCE
-async getBalanceEther(accountAddress) {
-    const wei = await this.web3.eth.getBalance(accountAddress);
+async getBalanceEther() {
+    const wei = await this.web3.eth.getBalance(this.account.address);
     const eth = await this.web3.utils.fromWei(wei, "ether");
     console.log(eth);
     return eth;
@@ -43,8 +66,8 @@ async getBalanceEther(accountAddress) {
 
 
 // ERC20 BS COIN BALANCE
-async getBalanceBS(accountAddress) {
-    const balance = await this.contractBuildings.methods.balanceOf(accountAddress).call();
+async getBalanceBS() {
+    const balance = await this.contractBuildings.methods.balanceOf(this.account.address).call();
     console.log(balance);
     return balance;
 }
@@ -74,44 +97,44 @@ async symbolCoin() {
 
 
 // FUNCTIONS TO ACCESS CONTRACT
-async createBuilding(accountAddress) {
-    const resp = await contractBuildings.methods.createBuilding("Edificio Central").send({ from: accountAddress, value: 1000000000000000000 });
+async createBuilding() {
+    const resp = await this.contractBuildings.methods.createBuilding("Edificio Central").send({ from: this.account.address, value: 1000000000000000000 });
     //console.log(resp);
     return resp;
 }
 
 async getBuildings() {
-    const resp = await contractBuildings.methods.getBuildingsTokenIdsFromAddress().call();
-    console.log(resp);
+    const resp = await this.contractBuildings.methods.getBuildingsTokenIdsFromAddress().call();
+    //console.log(resp);
     return resp;
 }
 
 async getBuilding(tokenId) {
-    const resp = await contractBuildings.methods.getBuilding(tokenId).call()
-    console.log(resp);
+    const resp = await this.contractBuildings.methods.getBuilding(tokenId).call()
+    //console.log(resp);
     return resp;
 }
 
-async upLevelBuilding(tokenId, accountAddress) {
-    const resp = await contractBuildings.methods.upLevelBuilding(tokenId).send({ from: accountAddress, value: 1000000000000000000 });
+async upLevelBuilding(tokenId) {
+    const resp = await this.contractBuildings.methods.upLevelBuilding(tokenId).send({ from: this.account.address, value: 1000000000000000000 });
     return resp;
 }
 
 async payloadBuilding(tokenId) {
-    const resp = await contractBuildings.methods.payLoadBuilding(tokenId).send();
+    const resp = await this.contractBuildings.methods.payLoadBuilding(tokenId).send();
     return resp;
 }
 
 
 // BUY/SELL Buildings METHODS
 async putBuildingOnSale(tokenId, value) {
-    const resp = await contractBuildings.methods.putBuildingOnSale(tokenId, value).send();
+    const resp = await this.contractBuildings.methods.putBuildingOnSale(tokenId, value).send();
     //console.log(resp);
     return resp;
 }
 
 async transferBuyBuilding(tokenId) {
-    const resp = await contractBuildings.methods.transferBuyBuilding(tokenId).send();
+    const resp = await this.contractBuildings.methods.transferBuyBuilding(tokenId).send();
     //console.log(resp);
     return resp;
 }
