@@ -6,7 +6,7 @@ import House from "./house";
 
 export default function Account(props: any) {
     return (
-        <div>
+        <div className="container">
             <h1>Address: {props.address}</h1>
             <h2>Ethereum: {props.ethereumBalance}</h2>
             <h2>{props.symbol}: {props.coinBalance}</h2>
@@ -20,7 +20,9 @@ export default function Account(props: any) {
 
             }}>Crear Edificio</button>
             <h2>Edificios En Propiedad:</h2>
+            <div className="row">
             {props.buildings}
+            </div>
             <br />
             <h2>Edificios en Venta:</h2>
             {props.buildingsOnSale}

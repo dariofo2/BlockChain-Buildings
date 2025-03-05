@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function House(props) {
     const [coinWin,setCoinWin] = useState(0 as number);
+    const [valorVenta,setValorVenta] = useState(0 as number);
     const fee=10;
 
     useEffect(()=>{
@@ -12,20 +13,22 @@ export default function House(props) {
     },[]);
     function updateCoinWin() {
         const dateNow = new Date();
-        let seconds=dateNow.getTime()/1000 as number;
-        const timeFromSpend=props.timeFromSpend as number;
-        console.log(timeFromSpend);
-        const time= seconds as number;
-        setCoinWin(time*fee);
+        const secondsNow=dateNow.getTime()/1000 as number;
+
+        const level=parseInt(props.level);
+        const timeFromSpend=parseInt(props.timeFromSpend);
+       
+        const time= secondsNow - timeFromSpend;
+        setCoinWin(time * fee * level);
     }
     return (
-        <div>
+        <div className="border border-1 text-center col" style={{borderColor:props.color}}>
+            <img className="img-fluid" src="/house1.jpg"></img>
             <h2>{props.name}</h2>
-            <h4>{props.level}</h4>
-            <h4>BDWin: {coinWin}</h4>
-            <h4>{props.owner}</h4>
-            <h5>{props.onSale}</h5>
-            <h6>{props.value}</h6>
+            <h4>Level: {props.level}</h4>
+            <h6>BDWin: {coinWin}</h6>
+            <h6>Owner: {props.owner}</h6>
+            <h6>Precio de Venta: {props.value}</h6>
             <button onClick={()=>{
                 props.buildsContract.payloadBuilding(props.tokenId);
                 location.reload();
@@ -35,11 +38,12 @@ export default function House(props) {
                 location.reload();
             }}>Level UP</button>
             <button onClick={() => {
-                const elemento=document.getElementById('valorVenta') as HTMLInputElement;
-                props.buildsContract.putBuildingOnSale(props.tokenId,elemento.value);
+                props.buildsContract.putBuildingOnSale(props.tokenId,valorVenta);
                 location.reload();
             }}>Poner en Venta</button>
-            <input id="valorVenta" type="number"></input>
+            <input id="valorVenta" type="number" onChange={(event)=>{
+                setValorVenta(parseInt(event.target.value));
+            }}></input>
         </div>
     )
 

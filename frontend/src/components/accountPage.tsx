@@ -42,7 +42,7 @@ export default function AccountPage(props: any) {
             const building: Building = await buildsContract.getBuilding(x);
             if (building.name!="") {
                 building.tokenId = x;
-
+                console.log(building.onSale);
                 buildingsObjetos.push(building);
 
             }
@@ -67,9 +67,10 @@ export default function AccountPage(props: any) {
     }
 
     const buildingsMap = buildings.map(x => {
-        if (x.onSale) {
+        if (!x.onSale) {
             return <House
                 key={x.tokenId}
+                color="green"
                 name={x.name}
                 level={x.level}
                 timeFromSpend={x.timeFromSpend}
@@ -83,6 +84,7 @@ export default function AccountPage(props: any) {
         } else {
             return <House
                 key={x.tokenId}
+                color="red"
                 name={x.name}
                 level={x.level}
                 timeFromSpend={x.timeFromSpend}
