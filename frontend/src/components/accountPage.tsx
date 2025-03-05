@@ -118,11 +118,13 @@ export default function AccountPage(props: any) {
 
 
     return (
-        <div>
+        <div style={{backgroundColor:"whitesmoke"}}>
+            <div className="text-center">
             <button className="btn btn-danger" onClick={()=>{
                 Cookies.remove("privateKey");
                 location.reload();
             }}>Logout</button>
+            </div>
             <Account
                 buildsContract={buildsContract}
                 address={accountData.address}
