@@ -15,7 +15,7 @@ export default function Account(props: any) {
         if (props.buildings!="") return (
             <div>
             <h2>My Buildings:</h2>
-            <div className="row row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3 justify-content-center">
+            <div className="row row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
                 {props.buildings}
             </div>
             </div>
@@ -25,7 +25,7 @@ export default function Account(props: any) {
         if (props.buildingsOnSale!="") return (
             <div>
             <h2>On Sale Buildings:</h2>
-            <div className="row justify-content-center row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+            <div className="row row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
                 {props.buildingsOnSale}
             </div>
             </div>
@@ -38,8 +38,8 @@ export default function Account(props: any) {
             {getEthereumBalance()}
             <h2><strong className="text-warning">{props.symbol}</strong> {props.coinBalance}</h2>
             <br></br>
-            <input id="nombreEdificio" type="text" placeholder="nombre Edificio"></input>
-            <button onClick={() => {
+            <input className="form-control w-25 d-inline" id="nombreEdificio" type="text" placeholder="nombre Edificio"></input>
+            <button className="btn btn-outline-primary" onClick={() => {
                 const element = document.getElementById('nombreEdificio') as HTMLInputElement;
                 if (element.value != "") {
                     props.buildsContract.createBuilding(element.value);
