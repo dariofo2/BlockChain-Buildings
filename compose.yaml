@@ -6,7 +6,7 @@ services:
       - "8545:8545"
     volumes:
       - ./blockchain:/app
-    command: sh -c "cd /app && npm install && npx hardhat node"
+    command: sh -c "cd /app && npm install && npx hardhat compile && npx hardhat node"
 
   frontend:
     image: node:alpine
@@ -15,7 +15,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-    command: sh -c "sleep 10 && cd /app && npm install && node /app/src/BuildingsFront/DeploySmartContract.js && npm run dev"
+    command: sh -c "sleep 15 && cd /app && npm install && node /app/src/BuildingsFront/DeploySmartContract.js && npm run dev"
     depends_on:
       blockchain:
         condition: service_started
