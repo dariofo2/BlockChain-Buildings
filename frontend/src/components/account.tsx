@@ -39,10 +39,10 @@ export default function Account(props: any) {
             <h2><strong className="text-warning">{props.symbol}</strong> {props.coinBalance}</h2>
             <br></br>
             <input className="form-control w-25 d-inline" id="nombreEdificio" type="text" placeholder="nombre Edificio"></input>
-            <button className="btn btn-outline-primary" onClick={() => {
+            <button className="btn btn-outline-primary" onClick={async () => {
                 const element = document.getElementById('nombreEdificio') as HTMLInputElement;
                 if (element.value != "") {
-                    props.buildsContract.createBuilding(element.value);
+                    await props.buildsContract.createBuilding(element.value);
                     location.reload();
                 }
 

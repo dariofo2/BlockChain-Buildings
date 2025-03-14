@@ -42,16 +42,16 @@ export default function House(props) {
                 <h4>Level: {props.level}</h4>
                 <h6>BDWin: {coinWin}</h6>
                 <h6>Precio de Venta: {props.value}</h6>
-                <button className="btn btn-success" onClick={() => {
-                    props.buildsContract.payloadBuilding(props.tokenId);
+                <button className="btn btn-success" onClick={async () => {
+                    await props.buildsContract.payloadBuilding(props.tokenId);
                     location.reload();
                 }}>PayLoad</button>
-                <button className="btn btn-primary" onClick={() => {
-                    props.buildsContract.upLevelBuilding(props.tokenId);
+                <button className="btn btn-primary" onClick={async () => {
+                    await props.buildsContract.upLevelBuilding(props.tokenId);
                     location.reload();
                 }}>Level UP</button>
-                <button className="btn btn-warning" onClick={() => {
-                    props.buildsContract.putBuildingOnSale(props.tokenId, valorVenta);
+                <button className="btn btn-warning" onClick={async () => {
+                    await props.buildsContract.putBuildingOnSale(props.tokenId, valorVenta);
                     location.reload();
                 }}>Poner en Venta</button>
                 <input className="form-control" id="valorVenta" type="number" onChange={(event) => {

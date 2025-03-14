@@ -16,8 +16,8 @@ export default function HouseOnSale(props) {
             <h2>{props.name}</h2>
             <h4>Level: {props.level}</h4>
             <h6>Precio de Venta: {props.value}</h6>
-            <button className="btn btn-primary" onClick={() => {
-                props.buildsContract.transferBuyBuilding(props.tokenId);
+            <button className="btn btn-primary" onClick={async () => {
+                await props.buildsContract.transferBuyBuilding(props.tokenId);
                 location.reload();
             }}>Comprar Casa</button>
             </div>
